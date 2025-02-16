@@ -21,8 +21,8 @@ class Rover():
             print("Invalid Starting Coordinates. Default Value ([0,0]) Used.")
             self.coords = [0,0]
 
-        if r in self.directions.keys():
-            self.card_direction = self.directions[r]
+        if r.upper() in self.directions.keys():
+            self.card_direction = self.directions[r.upper()]
         else:
             print("Invalid Direction. Default Value (North) Used.")
             self.card_direction = 0
