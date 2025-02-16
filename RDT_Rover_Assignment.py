@@ -27,7 +27,7 @@ class Rover():
             print("Invalid Direction. Default Value (North) Used.")
             self.card_direction = 0
     
-    def move(self):
+    def move(self,no_go_coords):
 
         new_pos = self.coords[:]
 
@@ -40,13 +40,18 @@ class Rover():
                 new_pos[1] -= 1
             case 3:
                 new_pos[0] -= 1
-
-        #Checks if the movement would move the rover out of the plateau
-        for i in range(2):
-            if new_pos[i] > self.max_dir[i] or new_pos[i] < 0:
-                print("Rover Attempted to Exit Plateau. Movement Aborted.")
-                new_pos = self.coords
- 
+        
+        #Checking for collisions with previous, inactive rovers
+        if new_pos in no_go_coords:
+            print("Rover Collision Averted. Movement Aborted.")
+            new_pos = self.coords
+        else:
+            #Checks if the movement would move the rover out of the plateau
+            for i in range(2):
+                if new_pos[i] > self.max_dir[i] or new_pos[i] < 0:
+                    print("Rover Attempted to Exit Plateau. Movement Aborted.")
+                    new_pos = self.coords
+        
         self.coords = new_pos
 
     def rotate(self, dir = 'L'):
@@ -75,6 +80,8 @@ def __main__():
             n+=1
         if n > 1:
             break
+    
+    inactive_rovers = []
 
     #Main loop for creating and moving rovers
     while True:
@@ -107,7 +114,7 @@ def __main__():
                 case 'R':
                     rover.rotate(dir = 'R')
                 case 'M':
-                    rover.move()
+                    rover.move(no_go_coords = inactive_rovers)
                 case _:
                     print("Invalid Command Char. Voiding Current Command.")
 
@@ -117,7 +124,8 @@ def __main__():
             if index == rover.card_direction:
                 curr_dir = card_dir
                 break
-
+                
+        inactive_rovers.append(rover.coords)
         print(str(rover.coords[0]) + ' ' + str(rover.coords[1]) + ' ' + curr_dir)
 
 __main__()
