@@ -9,7 +9,7 @@ class Rover():
 
         #All below statements check for valid coordinates and direction
 
-        if type(plat_size) == list and len(plat_size) == 2 and plat_size[0] > 0 and plat_size[1] > 0:
+        if type(plat_size) == list and len(plat_size) == 2 and plat_size[0] >= 0 and plat_size[1] >= 0:
             self.max_dir = plat_size
         else:
             print("Plateau Grid Error. Default Value ([0,0]) Used.")
@@ -29,25 +29,25 @@ class Rover():
     
     def move(self):
 
-        self.new_pos = self.coords
+        new_pos = self.coords[:]
 
         match self.card_direction:
             case 0:
-                self.new_pos[1] += 1
+                new_pos[1] += 1
             case 1:
-                self.new_pos[0] += 1
+                new_pos[0] += 1
             case 2:
-                self.new_pos[1] -= 1
+                new_pos[1] -= 1
             case 3:
-                self.new_pos[0] -= 1
+                new_pos[0] -= 1
 
         #Checks if the movement would move the rover out of the plateau
         for i in range(2):
-            if self.new_pos[i] > self.max_dir[i]:
+            if new_pos[i] > self.max_dir[i] or new_pos[i] < 0:
                 print("Rover Attempted to Exit Plateau. Movement Aborted.")
-                return
-            
-        self.coords = self.new_pos
+                new_pos = self.coords
+ 
+        self.coords = new_pos
 
     def rotate(self, dir = 'L'):
         #Changes the index for the direction and loops around to the other side if limites are exceeded
